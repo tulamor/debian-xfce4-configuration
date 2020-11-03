@@ -1,1 +1,296 @@
-# Python
+# Debian Configuration
+hackYOU
+GWPNRDQC
+
+Xfce is based on GTK+ version 2 (like Gnome 2). 
+
+https://wiki.debian.org/Xfce
+
+kniga konstrukcii dzheims gordon
+
+
+Frontline Assembly - Sustain Upright
+
+
+
+
+Ai for sentence
+https://thenextweb.com/apps/2020/04/21/microsoft-words-ai-wants-to-rewrite-your-crappy-sentences/
+
+
+
+---------
+XFCE's power managment GUI configurator <- to edit display power settings
+--------
+
+
+
+################# Add Keyboard Layout
+
+Keyboard > Application shortcuts> Add "thunar ." > SUPER (WINDOWS) + E
+
+---- add shortcut to thunar
+
+PATH: usr/bin/Thunar
+echo $PATH:
+/usr/local/bin:/usr/bin:/bin:/usr/local/games:/usr/games
+
+----- PRINTSCREEN SHORTCUT:
+XFCE Menu > Settings > Keyboard > Application Shortcuts
+most programs are in /usr/bin , to select for keyboard shortcut use show all files
+to find installation type in CLI: whereis <program name>
+add the xfce4-screenshooter -r
+MAN PAGE: https://docs.xfce.org/apps/screenshooter/usage
+
+CTRL+ALT > firefox
+
+###################
+
+XFCE4 Issue: clock dissapears from toolbar:
+Solution:
+just set the custom format you want, even if it's the same as one of the built in formats.
+The format specifiers are documented at docs.xfce.org/xfce/xfce4-panel/clock.
+Set custom Format: %R
+xfce4-panel --restart
+
+#################
+bluetooth for any pc
+pactl list short | grep module-bluetooth
+apt policy pulseaudio-module-bluetooth
+
+sudo apt-get install pulseaudio-module-bluetooth
+pactl load-module module-bluetooth-discover
+If it doesn't work, try restarting pulseaudio:
+
+pulseaudio -k
+pulseaudio -D
+
+ F8T016
+
+Install Driver for Belkin F8T016:
+
+Description: The Belkin F8T016 is very nearly working out of the box on Ubuntu Hardy unfortunately the driver needs a parameter to work correctly. Procedure:
+
+    sudo nano /etc/modprobe.d/blacklist
+        blacklist hci_usb 
+    sudo nano /etc/modules
+        hci_usb reset=1
+
+Belkin F8T016(uk) micro USB adapter.
+
+Initially detected by ubuntu hardy but doesn't work straight away. Needs two edits:
+
+    gksu gedit /etc/modprobe.d/blacklist
+    Add this line:
+    blacklist hci_usb
+
+    gksu gedit /etc/modules
+    Add this line:
+    hci_usb reset=1
+
+The first edit stops ubuntu automatically loading the module and the second loads the module with the correct parameter.
+
+
+sudo apt-get install pulseaudio-module-bluetooth
+killall pulseaudio
+if error erises:
+ Connection Failed: blueman.bluez.errors.DBusFailedError: Protocol not available.
+
+
+
+bluetooth for vostro v131
+After installing Debian with XFCE:
+sudo apt install pulseaudio-module-bluetooth 
+pulseaudio -k
+pulseaudio --start
+sudo apt-get install bluez-tools
+run: bluetoothctl
+scan on
+trust [DEVNAME]
+pair [DEVNAME]
+connect [DEVNAME]
+
+########## Software installation:
+sudo apt-get install chromium
+https://www.howtogeek.com/100361/how-to-optimize-google-chrome-for-maximum-privacy/
+https://www.ghacks.net/2013/11/09/disable-privacy-sensitive-features-google-chrome/
+
+Install VSCODE:
+sudo apt install ./<file>.deb
+turn off telemetry:
+https://code.visualstudio.com/docs/supporting/faq#_how-to-disable-telemetry-reporting
+https://code.visualstudio.com/docs/python/python-tutorial
+install pylint for python3:
+sudo apt install python3-pip
+
+add pylint to PATH:
+sudo nano /etc/profile
+add pylint location
+source /etc/profile
+
+sudo apt-get terminator
+sudo apt-get install vlc
+sudo apt install kolourpaint4 (better use Pinta but it crashes, need to wait for bug fix)
+sudo apt-get install youtube-dl
+
+obs-studio
+audacity
+losslessCut
+
+
+
+BRAIN -> COMPUTER INTERFACES
+
+
+******** SPECIFICATION
+short specs:
+lspci
+00:02.0 VGA compatible controller: Intel Corporation 2nd Generation Core Processor Family Integrated Graphics Controller (rev 09)
+Full specs:
+sudo lspci -v
+
+---- Find video card information:
+install lshw
+sudo lshw -c video
+
+********
+
+
+
+###### REMOVE PACKAGE COMPLETELY:
+sudo apt-get purge wordpress
+sudo apt-get autoremove
+
+
+
+
+---- Install nvidia drivers
+---- Install nvidia-xconfig
+writes file to:
+/etc/X11/xorg.conf
+
+
+
+-------------
+$USERNAME is not in the sudoers file.  This incident will be reported
+You can check if the currently logged in user belongs to the sudo group by using the groups command
+If the groups command does not return sudo on Debian-based Linux distributions, then that username can't run commands with sudo
+So to get root, then add your user to the sudo group, use:
+su -
+usermod -aG sudo YOUR_USERNAME
+exit
+
+Where:
+
+    su switches to the root user, while - runs a login shell so things like /etc/profile, .bashrc, and so on are executed (this way commands like usermod will be in your $PATH, so you don't have to type the full path to the executable). You may also use sudo su - instead of su -
+    You need to replace YOUR_USERNAME with the username that you want to add to the sudo group.
+    I have used usermode to add a group to an existing user because it should work on any Linux distribution. adduser or useradd can also be used for this (adduser USERNAME -G sudo) but they may not work across all Linux distributions. Even though this article is for Debian, I wanted to make it possible to use this on other Linux distributions as well (I noticed that adduser doesn't work on Solus OS for example).
+    exit exists the root shell, so you can run commands as a regular user again
+After this, sudo still won't work! You will need to logout from that user, then relogin, and sudo will work.
+
+Another typical example is to allow the user to run only specific commands via sudo. For example, to allow only the mkdir and rmdir commands you would use:
+/etc/sudoers
+
+username ALL=(ALL) NOPASSWD:/bin/mkdir,/bin/rmdir
+
+Instead of editing the sudoers file, you can achieve the same by creating a new file with the authorization rules in the /etc/sudoers.d directory. Add the same rule as you would add to the sudoers file:
+
+echo "username  ALL=(ALL) NOPASSWD:ALL" | sudo tee /etc/sudoers.d/username
+
+This approach makes the management of the sudo privileges more maintainable. The name of the file not important, but it is a common practice to name the file according to the username.
+
+------------
+Drawing software for debian:
+Pinta doesnt work
+
+-----------
+to remove software:
+sudo apt-get purge --auto-remove <package_name>
+
+
+
+find against freezing SSHFS:
+unmount the drive:
+fusermount -u -z /media/name_of_drive
+
+sshfs -odebug,sshfs_debug,loglevel=debug
+sshfs User@Server:/ /media/Server -o debug,sshfs_debug,loglevel=debug port=10000,allow_other,default_permissions
+
+
+
+Another "hotfix" that worked for me is
+umount /mount/point -f
+I sudo-ed it, don't know if that's necessary for all.
+Also, like above, don't autocomplete path with TAB. This "fix" made all my hung apps and windows complete their task queues and work as normal.
+
+sshfs <email address hidden>:/users/username /mount/dir -o idmap=user -o allow_other -o reconnect
+
+
+Workaround:
+
+If you go to a different TTY (ctrl+alt+F1) in stead of a Terminal Emulator, tab-complete will have no problem. You can
+umount --force /mount/point
+It will fail, but repeat a bunch of times and it will unmount.
+Switch back you your X session and all your resources are released and functional.
+---------
+Solution:
+* configure ssh with a ServerAliveInterval value. When there's no traffic to the ssh server, the ssh client will check if the server is still alive every once in a while. This will keepp traffic alive which means that whatever is in between will not terminate the connection. You will want this value to be small but not so small that it sends packagesevery second. For me, 120 (2 minutes) solves the problems but others may need to set it at 30. Add the following to /etc/ssh/ssh_config or to ~/.ssh/config file
+
+ServerAliveInterval 120
+
+* mount with the ServerAliveInterval option. Same as before but rather than configuring ssh, you pass this option when using sshfs. Basically, mount with the following command:
+sshfs user@host:dir mountpoint -o ServerAliveInterval=120
+* use the sshfs specific reconnect option (I haven't tested this option)
+sshfs user@host:dir mountpoint -o reconnect
+For more information see "man ssh_config" for all ssh options and "man sshfs" for the sshfs specific options.
+I do believe that this is poor design of sshfs but in their opinion the problem is that the user doesn't have its ssh client configured properly.
+----------
+Whenever I accidentally touch an sshfs mounted directory which is unavailable, I have to run "killall sshfs" to get things working again. This often happens when I mount a directory on my home network and touch that directory while at work.
+
+Right now my workaround is to use the "ServerAliveInterval" option without the "reconnect" option. This means that when the ssh connection is lost, sshfs exits (and unmounts the locally mounted directory). I then need to run sshfs again when I want to use the mount again (I could also use autofs, I assume).
+
+In my opinion the main problem is that sshfs leaves the local directory in an invalid state while it is "trying to reconnect". No matter what happenes, it seems clear that at any given time the mounted directory should either be mounted or unmounted -- meaning available or unavailable. If the underlying ssh connection has been lost, it makes no sense to keep the directory mounted (and locking up system calls). It's like if you pull a usb disk out of your computer. The media is unavailable. It should be unmounted, no matter what. This is more or less the behaviour I get without the reconnect option.
+
+I would suggest that the reconnect option should simply act as an "outer loop" around a non-reconnecting version of sshfs. The non-reconnecting version should close the ssh connection and unmount the local directory on disconnect. The reconnect loop should then both connect and mount when a connection to the remote host is available again.
+
+Obviously it is also a problem that many applications don't properly handle IO errors, and some even have IO operations in their main loops. But sshfs, fuse, and ssh can't do much to fix this.
+
+----
+sudo umount -l /mnt/mysshfs" 
+
+for debbuging purpose use sshfs with options:
+-o debug
+-o sshfs_debug
+
+To share between laptops / mount network drives:
+Use SMB/Samba or NFS or SSHFS
+
+
+SMBv3 on the server, CIFSv2.1 on *NIX clients, native on Windows. Honestly, this combination is the only one that allows me to get >20MB/s on my NAS. NFSv3 gave me 6MB/s, NFSv4 18MB/s, AFS wasn't something I was interested in, and SMBv3 gives me 45-50MB/s.
+I don't use transport encryption, but SMBv3 supports it, and as long as you don't enable anonymous browsing your share will be secured behind decent auth.
+Honestly I think this ticks all the boxes. As long as you're using SMBv3 you can really just use the defaults for your server (I mean, change the name and such), so configuration for both the server and the client are super simple, plus speed, security, and regular filesystem access.
+
+You have some pretty good ideas. Already listed. Nfs and sshfs are both really good minus sshfs is slow with a secure encryption level. And nfs is simple but pretty easy to sniff filenames and capture files when they go over the network. Here are a couple ideas for the more paranoid thinking.
+Iscsi with an encrypted LVM partition. Single node usage.
+Docker with a Kerberos server and another docker running a nfs v4 server. Encrypted and stored securely.
+
+
+https://blog.ja-ke.tech/2019/08/27/nas-performance-sshfs-nfs-smb.html
+
+Solution for hanging SSHFS:
+
+
+Use -o reconnect,ServerAliveInterval=15,ServerAliveCountMax=3
+
+The combination ServerAliveInterval=15,ServerAliveCountMax=3 causes the I/O errors to pop out after one minute of network outage. This is important but largely undocumented. If ServerAliveInterval option is left at default (so without the alive check), processes which experience I/O hang seem to sleep indefinitely, even after the sshfs gets reconnect'ed. I regard this a useless behavior.
+
+In other words what happens on -o reconnect without assigning ServerAliveInterval is that any I/O will either succeed, or hang the application indefinitely if the ssh reconnects underneath. A typical application becomes entirely hung as a result. If you'd wish to allow I/O to return an error and resume the application, you need ServerAliveInterval=1 or greater.
+
+The ServerAliveCountMax=3 is the default anyway, but I like to specify it for readability.
+
+
+
+
+
+
+
