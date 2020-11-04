@@ -288,9 +288,15 @@ In other words what happens on -o reconnect without assigning ServerAliveInterva
 
 The ServerAliveCountMax=3 is the default anyway, but I like to specify it for readability.
 
+######## XFCE Shortcuts #########
 
+CTRL ALT D = Hide all windows
+ALT + F3 = Application finder [ALT + F2]
+Windows + L = Logout window
+ALT + F10 = MAXIMIZE
+【Super+p】 【XF86Display】
 
-
+#################
 
 
 
