@@ -37,6 +37,25 @@ The format specifiers are documented at docs.xfce.org/xfce/xfce4-panel/clock.
 Set custom Format: %R
 xfce4-panel --restart
 
+################# TO ADD AUDIO CONTROL ON PANEL:
+
+Panel preferences > Items > Hit + > Search for Pulse audio
+
+################# TO ADD KEYBOARD LANGUAGES:
+
+https://wiki.debian.org/Keyboard
+
+sudo nano /etc/default/keyboard
+XKBLAYOUT="us,lt,ru"
+XKBOPTIONS="grp:alt_shift_toggle"
+sudo udevadm trigger --subsystem-match=input --action=change
+
+################# CONFIGURE TIME (DEBIAN)
+
+sudo dpkg-reconfigure tzdata
+***if time configuration doesnt work mannualy:
+sudo timedatectl set-ntp false
+
 #################
 bluetooth for any pc
 pactl list short | grep module-bluetooth
