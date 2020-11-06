@@ -301,5 +301,14 @@ ALT + F10 = MAXIMIZE
 
 #################
 
+To undo git add before a commit:
+Run git reset <file> or git reset to unstage all changes.
+In older versions of git, the commands were git reset HEAD <file> and git reset HEAD respectively. This was changed in Git 1.8.2
 
+-------------
+Push specific commit:
+$ git push <remote name> <commit hash>:<remote branch name>
+
+# Example:
+$ git push origin 2dc2b7e393e6b712ef103eaac81050b9693395a4:master
 
