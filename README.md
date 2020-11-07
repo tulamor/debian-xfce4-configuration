@@ -113,6 +113,24 @@ trust [DEVNAME]
 pair [DEVNAME]
 connect [DEVNAME]
 
+#############
+
+#### SCP USE:
+http://www.hypexr.org/linux_scp_help.php
+1. On local machine run script to take file from dev machine:
+    scp username@machinename.cern.ch:/build/source/filename /home/destination_folder/
+2. Upload file from local machine to server:
+    scp /home/source username@machinename.cern.ch:/build/destination_folder/
+    Example with ip adress:
+        scp file.txt remote_username@10.10.0.2:/remote/directory
+
+To specify name of the file while will be uploaded to server:
+    scp file.txt remote_username@10.10.0.2:/remote/directory/newfilename.txt
+
+#To copy a directory from a local to remote system, use the -r option:
+    scp -r /local/directory remote_username@10.10.0.2:/remote/directory
+More about scp commands: https://linuxize.com/post/how-to-use-scp-command-to-securely-transfer-files/
+
 ########## Software installation:
 sudo apt-get install chromium
 https://www.howtogeek.com/100361/how-to-optimize-google-chrome-for-maximum-privacy/
