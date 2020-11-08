@@ -1,3 +1,107 @@
+Debian 10 Buster
+
+1. Download latest version: 
+https://www.debian.org/CD/http-ftp/#stable
+Download latest version: https://cdimage.debian.org/debian-cd/current/amd64/iso-cd/
+(The netinst CD here is a small CD image that contains just the core Debian installer code and a small core set of text-mode programs)
+
+
+2. Download firmware:
+
+ download the firmware archive for your platform and unpack it into a directory named firmware in the root of a removable storage device (USB/CD drive). When the installer starts, it will automatically find the firmware files in the directory on the removable storage and, if needed, install the firmware for your hardware
+https://wiki.debian.org/Firmware
+http://cdimage.debian.org/cdimage/unofficial/non-free/firmware/
+
+3.
+https://www.debian.org/CD/faq/#write-usb
+Additionally to the method above for Linux systems, there is also the win32diskimager program available, which allows writing such bootable USB flash drives under Windows. Hint: win32diskimager will apparently only list input files named *.img by default, while the Debian images are named *.iso. Change the filter to *.* if you use this tool. 
+
+###############
+
+https://cdimage.debian.org/debian-cd/current/amd64/iso-dvd/
+
+
+************ D R I V E R S **************************
+
+https://wiki.debian.org/Firmware
+https://cdimage.debian.org/cdimage/unofficial/non-free/cd-including-firmware/
+http://cdimage.debian.org/cdimage/unofficial/non-free/firmware/stretch/ - just put archive contained files into any flash root directory
+
+**************************************
+
+https://www.debian.org/releases/jessie/i386/ch04s03.html.en - prepare bootable flash
+
+list of connected drives fdisk -l
+
+I ve got an error, so here the solution:
+
+failed to determine the codename for the release debootstrap error
+
+I ran into this same problem. I used unetbootin to create the image on a USB thumb drive.
+
+unetbootin was not the problem. The problem was related to the media not being mounted under /cdrom
+
+I had to manually mount the usb to /cdrom and when I retried the install, I was able to get past the "bootstrap error".
+
+I did this by hitting alt-f2 and then (if alt-f2 not working just load ash)
+mount /dev/sdc1 /cdrom
+then alt-f1 to get back to the install
+
+The device for the usb drive may vary. For me it was /dev/sdc1.
+
+I have no idea why the installer isn't smart enough to know to either mount the install media in /cdrom itself of look for it in /target/media/cdrom where it already had it mounted.
+
+
+
+**************************************
+
+
+linux-image-amd64 is a generic metapackage, which depends on the specific default kernel package. In your particular case, linux-image-amd64 probably depends on linux-image-3.16-2-amd64. In general it suffices to install the generic metapackage. You could alternatively install the specific linux-image-3.16-2-amd64 package, but in general it is better style to install the generic meta package.
+
+One specific advantage of installing the generic metapackage (and keeping it installed) is that it makes sure you always stay current on system upgrades. Otherwise, supposing you are upgrading from one Debian release to the next, or even from Debian stable to Debian testing, your kernel version will not automatically be upgraded, aside from minor Debian-specific upgrades for security reasons. However, if you have the generic metapackage installed, the latest kernel will be pulled in as a dependency.
+
+
+**************************************
+
+https://debian-handbook.info/browse/stable/sect.installation-steps.html
+https://www.debian.org/releases/stable/arm64/ch06s01.html.en
+
+Ctrl+Left Alt+F2- console mode
+
+install grub boot loader
+
+
+
+apt-get purge xserver-xorg-legacy
+apt-get install xrdp
+
+
+Applications -> Settings -> Keyboard.
+Open the Application Shortcuts Tab. This is what it looks like(customised).
+To Add a new Shortcut, click on Add 
+xfce4-terminal
+
+
+
+how to know vnc port listening current session
+
+One option if you have ssh connection to the other machine is to find the litening ports for vnc as explained at the end of this post
+
+You could login a ssh session and find out the number by
+
+netstat -tulpn | grep vnc
+
+and you will get something like the following
+
+tcp   0    0 127.0.0.1:5910     0.0.0.0:*     LISTEN      5365/Xvnc
+
+and then you know 5910 was the port you connected to.
+
+
+
+
+
+################
 # Debian Configuration
 
 
@@ -317,7 +421,17 @@ Windows + L = Logout window
 ALT + F10 = MAXIMIZE
 【Super+p】 【XF86Display】
 
-#################
+
+##################################
+Fully remove app with it's deps
+sudo apt-get purge --auto-remove libegl1-mesa-dev
+
+##################################
+How to get motherboard model?
+sudo dmidecode -t 2ddd
+
+
+#########  G I T  ########
 
 To undo git add before a commit:
 Run git reset <file> or git reset to unstage all changes.
