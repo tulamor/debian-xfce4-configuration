@@ -7,59 +7,50 @@ Download latest version: https://cdimage.debian.org/debian-cd/current/amd64/iso-
 
 
 2. Download firmware:
-
- download the firmware archive for your platform and unpack it into a directory named firmware in the root of a removable storage device (USB/CD drive). When the installer starts, it will automatically find the firmware files in the directory on the removable storage and, if needed, install the firmware for your hardware
+Download the firmware archive for your platform and unpack it into a directory named firmware in the root of a removable storage device (USB/CD drive). 
+When the installer starts, it will automatically find the firmware files in the directory on the removable storage and, if needed, install the firmware for your hardware.
 https://wiki.debian.org/Firmware
 http://cdimage.debian.org/cdimage/unofficial/non-free/firmware/
 
-3.
-https://www.debian.org/CD/faq/#write-usb
-Additionally to the method above for Linux systems, there is also the win32diskimager program available, which allows writing such bootable USB flash drives under Windows. Hint: win32diskimager will apparently only list input files named *.img by default, while the Debian images are named *.iso. Change the filter to *.* if you use this tool. 
+OR:
 
-###############
-
-https://cdimage.debian.org/debian-cd/current/amd64/iso-dvd/
-
-
-************ D R I V E R S **************************
-
-https://wiki.debian.org/Firmware
+Unofficial non-free images including firmware packages:
 https://cdimage.debian.org/cdimage/unofficial/non-free/cd-including-firmware/
-http://cdimage.debian.org/cdimage/unofficial/non-free/firmware/stretch/ - just put archive contained files into any flash root directory
 
-**************************************
+3. Create bootable USB drive
+https://www.debian.org/CD/faq/#write-usb
+Additionally to the method above for Linux systems, there is also the win32diskimager program available, which allows writing such bootable USB flash drives under Windows.
+Hint: win32diskimager will apparently only list input files named *.img by default, while the Debian images are named *.iso. Change the filter to *.* if you use this tool. 
 
 https://www.debian.org/releases/jessie/i386/ch04s03.html.en - prepare bootable flash
 
 list of connected drives fdisk -l
-
-I ve got an error, so here the solution:
+I've got an error, so here is the solution:
 
 failed to determine the codename for the release debootstrap error
 
-I ran into this same problem. I used unetbootin to create the image on a USB thumb drive.
-
+I used unetbootin to create the image on a USB thumb drive.
 unetbootin was not the problem. The problem was related to the media not being mounted under /cdrom
-
 I had to manually mount the usb to /cdrom and when I retried the install, I was able to get past the "bootstrap error".
-
 I did this by hitting alt-f2 and then (if alt-f2 not working just load ash)
 mount /dev/sdc1 /cdrom
 then alt-f1 to get back to the install
 
 The device for the usb drive may vary. For me it was /dev/sdc1.
-
 I have no idea why the installer isn't smart enough to know to either mount the install media in /cdrom itself of look for it in /target/media/cdrom where it already had it mounted.
 
 
 
 **************************************
 
+linux-image-amd64 is a generic metapackage, which depends on the specific default kernel package. 
+In your particular case, linux-image-amd64 probably depends on linux-image-3.16-2-amd64. 
+In general it suffices to install the generic metapackage. 
+You could alternatively install the specific linux-image-3.16-2-amd64 package, but in general it is better style to install the generic meta package.
 
-linux-image-amd64 is a generic metapackage, which depends on the specific default kernel package. In your particular case, linux-image-amd64 probably depends on linux-image-3.16-2-amd64. In general it suffices to install the generic metapackage. You could alternatively install the specific linux-image-3.16-2-amd64 package, but in general it is better style to install the generic meta package.
-
-One specific advantage of installing the generic metapackage (and keeping it installed) is that it makes sure you always stay current on system upgrades. Otherwise, supposing you are upgrading from one Debian release to the next, or even from Debian stable to Debian testing, your kernel version will not automatically be upgraded, aside from minor Debian-specific upgrades for security reasons. However, if you have the generic metapackage installed, the latest kernel will be pulled in as a dependency.
-
+One specific advantage of installing the generic metapackage (and keeping it installed) is that it makes sure you always stay current on system upgrades. 
+Otherwise, supposing you are upgrading from one Debian release to the next, or even from Debian stable to Debian testing, your kernel version will not automatically be upgraded, aside from minor Debian-specific upgrades for security reasons. 
+However, if you have the generic metapackage installed, the latest kernel will be pulled in as a dependency.
 
 **************************************
 
@@ -67,29 +58,20 @@ https://debian-handbook.info/browse/stable/sect.installation-steps.html
 https://www.debian.org/releases/stable/arm64/ch06s01.html.en
 
 Ctrl+Left Alt+F2- console mode
-
 install grub boot loader
-
-
 
 apt-get purge xserver-xorg-legacy
 apt-get install xrdp
-
 
 Applications -> Settings -> Keyboard.
 Open the Application Shortcuts Tab. This is what it looks like(customised).
 To Add a new Shortcut, click on Add 
 xfce4-terminal
 
-
-
-how to know vnc port listening current session
-
+How to know vnc port listening current session:
 One option if you have ssh connection to the other machine is to find the litening ports for vnc as explained at the end of this post
-
 You could login a ssh session and find out the number by
-
-netstat -tulpn | grep vnc
+    netstat -tulpn | grep vnc
 
 and you will get something like the following
 
@@ -97,16 +79,9 @@ tcp   0    0 127.0.0.1:5910     0.0.0.0:*     LISTEN      5365/Xvnc
 
 and then you know 5910 was the port you connected to.
 
-
-
-
-
 ################
-# Debian Configuration
-
-
+# Configuration
 Xfce is based on GTK+ version 2 (like Gnome 2). 
-
 https://wiki.debian.org/Xfce
 
 ---------
@@ -117,7 +92,7 @@ XFCE's power managment GUI configurator <- to edit display power settings
 
 Keyboard > Application shortcuts> Add "thunar ." > SUPER (WINDOWS) + E
 
----- add shortcut to thunar
+---- Add shortcut to thunar
 
 PATH: usr/bin/Thunar
 echo $PATH:
@@ -131,6 +106,12 @@ add the xfce4-screenshooter -r
 MAN PAGE: https://docs.xfce.org/apps/screenshooter/usage
 
 CTRL+ALT > firefox
+
+################# CONFIGURE TIME (DEBIAN)
+
+sudo dpkg-reconfigure tzdata
+***if time configuration doesn't work mannualy:
+sudo timedatectl set-ntp false
 
 ###################
 
@@ -154,57 +135,34 @@ XKBLAYOUT="us,lt,ru"
 XKBOPTIONS="grp:alt_shift_toggle"
 sudo udevadm trigger --subsystem-match=input --action=change
 
-################# CONFIGURE TIME (DEBIAN)
-
-sudo dpkg-reconfigure tzdata
-***if time configuration doesnt work mannualy:
-sudo timedatectl set-ntp false
-
 #################
 bluetooth for any pc
 pactl list short | grep module-bluetooth
 apt policy pulseaudio-module-bluetooth
-
 sudo apt-get install pulseaudio-module-bluetooth
 pactl load-module module-bluetooth-discover
-If it doesn't work, try restarting pulseaudio:
 
+If it doesn't work, try restarting pulseaudio:
 pulseaudio -k
 pulseaudio -D
 
- F8T016
+Install Driver for "Belkin F8T016":
 
-Install Driver for Belkin F8T016:
-
-Description: The Belkin F8T016 is very nearly working out of the box on Ubuntu Hardy unfortunately the driver needs a parameter to work correctly. Procedure:
+Initially detected by ubuntu but doesn't work straight away. Needs two edits:
 
     sudo nano /etc/modprobe.d/blacklist
-        blacklist hci_usb 
+        blacklist hci_usb  < assert line
     sudo nano /etc/modules
-        hci_usb reset=1
-
-Belkin F8T016(uk) micro USB adapter.
-
-Initially detected by ubuntu hardy but doesn't work straight away. Needs two edits:
-
-    gksu gedit /etc/modprobe.d/blacklist
-    Add this line:
-    blacklist hci_usb
-
-    gksu gedit /etc/modules
-    Add this line:
-    hci_usb reset=1
+        hci_usb reset=1  < assert line
 
 The first edit stops ubuntu automatically loading the module and the second loads the module with the correct parameter.
-
 
 sudo apt-get install pulseaudio-module-bluetooth
 killall pulseaudio
 if error erises:
  Connection Failed: blueman.bluez.errors.DBusFailedError: Protocol not available.
 
-
-
+************** 
 bluetooth for vostro v131
 After installing Debian with XFCE:
 sudo apt install pulseaudio-module-bluetooth 
@@ -260,12 +218,7 @@ sudo apt-get install youtube-dl
 
 obs-studio
 audacity
-losslessCut
-
-
-
-BRAIN -> COMPUTER INTERFACES
-
+losslessCutd
 
 ******** SPECIFICATION
 short specs:
@@ -286,15 +239,10 @@ sudo lshw -c video
 sudo apt-get purge wordpress
 sudo apt-get autoremove
 
-
-
-
 ---- Install nvidia drivers
 ---- Install nvidia-xconfig
 writes file to:
 /etc/X11/xorg.conf
-
-
 
 -------------
 $USERNAME is not in the sudoers file.  This incident will be reported
@@ -324,15 +272,15 @@ echo "username  ALL=(ALL) NOPASSWD:ALL" | sudo tee /etc/sudoers.d/username
 
 This approach makes the management of the sudo privileges more maintainable. The name of the file not important, but it is a common practice to name the file according to the username.
 
-------------
+*************************************
 Drawing software for debian:
 Pinta doesnt work
 
------------
-to remove software:
+*************************************
+Completely remove app with it's deps
 sudo apt-get purge --auto-remove <package_name>
 
-
+*************************************
 
 find against freezing SSHFS:
 unmount the drive:
@@ -420,11 +368,6 @@ ALT + F3 = Application finder [ALT + F2]
 Windows + L = Logout window
 ALT + F10 = MAXIMIZE
 【Super+p】 【XF86Display】
-
-
-##################################
-Fully remove app with it's deps
-sudo apt-get purge --auto-remove libegl1-mesa-dev
 
 ##################################
 How to get motherboard model?
