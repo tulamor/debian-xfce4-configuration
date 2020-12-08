@@ -160,10 +160,10 @@ The first edit stops ubuntu automatically loading the module and the second load
 sudo apt-get install pulseaudio-module-bluetooth
 killall pulseaudio
 if error erises:
- Connection Failed: blueman.bluez.errors.DBusFailedError: Protocol not available.
+Connection Failed: blueman.bluez.errors.DBusFailedError: Protocol not available.
 
 ************** 
-bluetooth for vostro v131
+
 After installing Debian with XFCE:
 sudo apt install pulseaudio-module-bluetooth 
 pulseaudio -k
@@ -210,12 +210,9 @@ add pylint to PATH:
 sudo nano /etc/profile
 add pylint location
 source /etc/profile
-
 sudo apt-get terminator
 sudo apt-get install vlc
 sudo apt install kolourpaint4 (better use Pinta but it crashes, need to wait for bug fix)
-sudo apt-get install youtube-dl
-
 obs-studio
 audacity
 losslessCutd
@@ -386,4 +383,8 @@ $ git push <remote name> <commit hash>:<remote branch name>
 
 # Example:
 $ git push origin 2dc2b7e393e6b712ef103eaac81050b9693395a4:master
+
+################################################
+
+
 
