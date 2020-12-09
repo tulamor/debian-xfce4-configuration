@@ -368,7 +368,28 @@ ALT + F10 = MAXIMIZE
 
 ##################################
 How to get motherboard model?
-sudo dmidecode -t 2ddd
+sudo dmidecode -t 2
+
+##################################
+cat /proc/version - Installed Linux version information
+/usr/sbin/apache2 -v - Apache version information
+
+#################################
+/etc/init.d/apache2 stop
+/etc/init.d/apache2 start
+#################################
+
+Format Hard Drive
+mkfs.ext3 /dev/sda
+################################
+View connected drives:
+List all of the partitions on all devices that are listed in /proc/partitions:
+sudo fdisk -l
+List all block storage devices.
+lsblk
+################################
+View information about connections
+cd /etc/NetworkManager/system-connections
 
 
 #########  G I T  ########
