@@ -2,7 +2,7 @@ Debian 10 Buster
 
 1. Download latest version: 
 https://www.debian.org/CD/http-ftp/#stable
-Download latest version: https://cdimage.debian.org/debian-cd/current/amd64/iso-cd/
+Download latest version: https://cdimage.debian.org/debian-cd/current/amd64/iso-dvd/
 (The netinst CD here is a small CD image that contains just the core Debian installer code and a small core set of text-mode programs)
 
 
@@ -25,21 +25,17 @@ Hint: win32diskimager will apparently only list input files named *.img by defau
 https://www.debian.org/releases/jessie/i386/ch04s03.html.en - prepare bootable flash
 
 list of connected drives fdisk -l
-I've got an error, so here is the solution:
 
+Error:
 failed to determine the codename for the release debootstrap error
-
-I used unetbootin to create the image on a USB thumb drive.
-unetbootin was not the problem. The problem was related to the media not being mounted under /cdrom
-I had to manually mount the usb to /cdrom and when I retried the install, I was able to get past the "bootstrap error".
-I did this by hitting alt-f2 and then (if alt-f2 not working just load ash)
+Solution:
+While used unetbootin to create the image on a USB thumb drive. Unetbootin was not the problem, the media not being mounted under /cdrom.
+So it should be manually mounted the usb to /cdrom.
+Hit alt-f2 and then (if alt-f2 not working just load ash)
 mount /dev/sdc1 /cdrom
 then alt-f1 to get back to the install
-
 The device for the usb drive may vary. For me it was /dev/sdc1.
-I have no idea why the installer isn't smart enough to know to either mount the install media in /cdrom itself of look for it in /target/media/cdrom where it already had it mounted.
-
-
+The installer isn't smart enough to know to either mount the install media in /cdrom itself or look for it in /target/media/cdrom.
 
 **************************************
 
@@ -49,7 +45,8 @@ In general it suffices to install the generic metapackage.
 You could alternatively install the specific linux-image-3.16-2-amd64 package, but in general it is better style to install the generic meta package.
 
 One specific advantage of installing the generic metapackage (and keeping it installed) is that it makes sure you always stay current on system upgrades. 
-Otherwise, supposing you are upgrading from one Debian release to the next, or even from Debian stable to Debian testing, your kernel version will not automatically be upgraded, aside from minor Debian-specific upgrades for security reasons. 
+Otherwise, supposing you are upgrading from one Debian release to the next, or even from Debian stable to Debian testing, your kernel version will not automatically be upgraded,
+aside from minor Debian-specific upgrades for security reasons. 
 However, if you have the generic metapackage installed, the latest kernel will be pulled in as a dependency.
 
 **************************************
@@ -113,8 +110,6 @@ sudo dpkg-reconfigure tzdata
 ***if time configuration doesn't work mannualy:
 sudo timedatectl set-ntp false
 
-###################
-
 XFCE4 Issue: clock dissapears from toolbar:
 Solution:
 just set the custom format you want, even if it's the same as one of the built in formats.
@@ -124,7 +119,7 @@ xfce4-panel --restart
 
 ################# TO ADD AUDIO CONTROL ON PANEL:
 
-Panel preferences > Items > Hit + > Search for Pulse audio
+Panel preferences > Items > Hit + > Search for Pulseaudio
 
 ################# TO ADD KEYBOARD LANGUAGES:
 
@@ -175,7 +170,16 @@ trust [DEVNAME]
 pair [DEVNAME]
 connect [DEVNAME]
 
-#############
+##########################
+
+To change Bluetooth Audio profile:
+systemctl restart bluetooth
+bluetoothctl
+pacmd list-cards
+pacmd set-card-profile {index} {profile_name}
+pacmd set-card-profile 3 a2dp_sink
+
+##########################
 
 #### SCP USE:
 http://www.hypexr.org/linux_scp_help.php
@@ -229,8 +233,6 @@ install lshw
 sudo lshw -c video
 
 ********
-
-
 
 ###### REMOVE PACKAGE COMPLETELY:
 sudo apt-get purge wordpress
@@ -367,29 +369,63 @@ ALT + F10 = MAXIMIZE
 【Super+p】 【XF86Display】
 
 ##################################
+
 How to get motherboard model?
 sudo dmidecode -t 2
 
+
 ##################################
+
 cat /proc/version - Installed Linux version information
 /usr/sbin/apache2 -v - Apache version information
 
 #################################
+
 /etc/init.d/apache2 stop
 /etc/init.d/apache2 start
+
 #################################
 
 Format Hard Drive
 mkfs.ext3 /dev/sda
+
 ################################
+
 View connected drives:
 List all of the partitions on all devices that are listed in /proc/partitions:
 sudo fdisk -l
 List all block storage devices.
 lsblk
+
 ################################
+
 View information about connections
 cd /etc/NetworkManager/system-connections
+
+
+################################
+Configure multiple displays:
+
+cd /usr/share/X11/xorg.conf.d
+sudo nano ~/.config/xfce4/xfconf/xfce-perchannel-xml/displays.xml
+/etc/X11/xorg.conf
+
+1)-----
+gtf 1920 1080 60
+OUTPUT:
+  # 1920x1080 @ 60.00 Hz (GTF) hsync: 67.08 kHz; pclk: 172.80 MHz
+  Modeline "1920x1080_60.00"  172.80  1920 2040 2248 2576  1080 1081 1084 1118  -HSync +Vsync
+2)-----
+xrandr --newmode "1920x1080_60.00"  172.80  1920 2040 2248 2576  1080 1081 1084 1118  -HSync +Vsync
+xrandr --newmode "1080p"  172.80  1920 2040 2248 2576  1080 1081 1084 1118  -HSync +Vsync
+3)-----
+xrandr --addmode DVI-I-1 1920x1080_60.00
+xrandr --addmode DVI-I-2 1080p
+4)-----
+xrandr --output DVI-I-1 --mode 1920x1080_60.00 --rate 60
+xrandr --output DVI-I-2 --mode 1080p
+
+
 
 
 #########  G I T  ########
