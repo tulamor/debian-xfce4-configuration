@@ -401,7 +401,9 @@ lsblk
 
 View information about connections
 cd /etc/NetworkManager/system-connections
-
+---------------------------------
+Debug wifi connection:
+dmesg
 
 ################################
 Configure multiple displays:
@@ -425,6 +427,13 @@ xrandr --addmode DVI-I-2 1080p
 xrandr --output DVI-I-1 --mode 1920x1080_60.00 --rate 60
 xrandr --output DVI-I-2 --mode 1080p
 
+##########################
+
+Tool for enabling and disabling wireless devices
+rfkill list
+rfkill unblock wlan
+
+ip -brief link
 
 
 
@@ -440,8 +449,12 @@ $ git push <remote name> <commit hash>:<remote branch name>
 
 # Example:
 $ git push origin 2dc2b7e393e6b712ef103eaac81050b9693395a4:master
+------------------------------------------------
+Undo the act of committing, leaving everything else intact:
+git reset --soft HEAD^
+To undo the act of committing and everything you'd staged, but leave the work tree (your files intact):
+git reset HEAD^
+To throw away all uncommitted changes, resetting everything to the previous commit:
+git reset --hard HEAD^
 
 ################################################
-
-
-
