@@ -1,31 +1,31 @@
 Debian 10 Buster
 
 1. Download latest version: 
-https://www.debian.org/CD/http-ftp/#stable
-Download latest version: https://cdimage.debian.org/debian-cd/current/amd64/iso-dvd/
-(The netinst CD here is a small CD image that contains just the core Debian installer code and a small core set of text-mode programs)
+https://www.debian.org/CD/http-ftp/#stable  
+Download latest version: https://cdimage.debian.org/debian-cd/current/amd64/iso-dvd/  
+(The netinst CD here is a small CD image that contains just the core Debian installer code and a small core set of text-mode programs)  
+  
 
-
-2. Download firmware:
-Download the firmware archive for your platform and unpack it into a directory named firmware in the root of a removable storage device (USB/CD drive). 
-When the installer starts, it will automatically find the firmware files in the directory on the removable storage and, if needed, install the firmware for your hardware.
-https://wiki.debian.org/Firmware
-http://cdimage.debian.org/cdimage/unofficial/non-free/firmware/
-
-OR:
-
-Unofficial non-free images including firmware packages:
-https://cdimage.debian.org/cdimage/unofficial/non-free/cd-including-firmware/
-
-3. Create bootable USB drive
-https://www.debian.org/CD/faq/#write-usb
-Additionally to the method above for Linux systems, there is also the win32diskimager program available, which allows writing such bootable USB flash drives under Windows.
-Hint: win32diskimager will apparently only list input files named *.img by default, while the Debian images are named *.iso. Change the filter to *.* if you use this tool. 
-
-https://www.debian.org/releases/jessie/i386/ch04s03.html.en - prepare bootable flash
-
-list of connected drives fdisk -l
-
+2. Download firmware:  
+Download the firmware archive for your platform and unpack it into a directory named firmware in the root of a removable storage device (USB/CD drive).  
+When the installer starts, it will automatically find the firmware files in the directory on the removable storage and, if needed, install the firmware for your hardware.  
+https://wiki.debian.org/Firmware  
+http://cdimage.debian.org/cdimage/unofficial/non-free/firmware/  
+  
+OR:  
+  
+Unofficial non-free images including firmware packages:  
+https://cdimage.debian.org/cdimage/unofficial/non-free/cd-including-firmware/  
+  
+3. Create bootable USB drive  
+https://www.debian.org/CD/faq/#write-usb  
+Additionally to the method above for Linux systems, there is also the win32diskimager program available, which allows writing such bootable USB flash drives under Windows.  
+Hint: win32diskimager will apparently only list input files named *.img by default, while the Debian images are named *.iso. Change the filter to *.* if you use this tool.  
+  
+https://www.debian.org/releases/jessie/i386/ch04s03.html.en - prepare bootable flash  
+  
+list of connected drives fdisk -l  
+  
 Error:
 failed to determine the codename for the release debootstrap error
 Solution:
@@ -159,38 +159,37 @@ Connection Failed: blueman.bluez.errors.DBusFailedError: Protocol not available.
 
 ************** 
 
-After installing Debian with XFCE:
-sudo apt install pulseaudio-module-bluetooth 
-pulseaudio -k
-pulseaudio --start
-sudo apt-get install bluez-tools
-run: bluetoothctl
-scan on
-trust [DEVNAME]
-pair [DEVNAME]
-connect [DEVNAME]
-
+After installing Debian with XFCE:  
+sudo apt install pulseaudio-module-bluetooth  
+pulseaudio -k  
+pulseaudio --start  
+sudo apt-get install bluez-tools  
+run: bluetoothctl  
+scan on  
+trust [DEVNAME]  
+pair [DEVNAME]  
+connect [DEVNAME]  
+  
 ##########################
-
-To change Bluetooth Audio profile:
-systemctl restart bluetooth
-bluetoothctl
-pacmd list-cards
-pacmd set-card-profile {index} {profile_name}
-pacmd set-card-profile 3 a2dp_sink
-
+  
+To change Bluetooth Audio profile:  
+systemctl restart bluetooth  
+pacmd list-cards  
+pacmd set-card-profile {index} {profile_name}  
+pacmd set-card-profile 3 a2dp_sink  
+  
 ##########################
-
+  
 #### SCP USE:
 http://www.hypexr.org/linux_scp_help.php
-1. On local machine run script to take file from dev machine:
+1. On local machine run script to take file from dev machine:  
     scp username@machinename.cern.ch:/build/source/filename /home/destination_folder/
-2. Upload file from local machine to server:
-    scp /home/source username@machinename.cern.ch:/build/destination_folder/
-    Example with ip adress:
-        scp file.txt remote_username@10.10.0.2:/remote/directory
+2. Upload file from local machine to server:  
+    scp /home/source username@machinename.cern.ch:/build/destination_folder/  
+    Example with ip adress:  
+    scp file.txt remote_username@10.10.0.2:/remote/directory
 
-To specify name of the file while will be uploaded to server:
+To specify name of the file while will be uploaded to server:  
     scp file.txt remote_username@10.10.0.2:/remote/directory/newfilename.txt
 
 #To copy a directory from a local to remote system, use the -r option:
@@ -210,27 +209,27 @@ https://code.visualstudio.com/docs/python/python-tutorial
 install pylint for python3:
 sudo apt install python3-pip
 
-add pylint to PATH:
-sudo nano /etc/profile
-add pylint location
-source /etc/profile
-sudo apt-get terminator
-sudo apt-get install vlc
-sudo apt install kolourpaint4 (better use Pinta but it crashes, need to wait for bug fix)
-obs-studio
-audacity
-losslessCutd
-
+add pylint to PATH:  
+sudo nano /etc/profile  
+add pylint location  
+source /etc/profile  
+sudo apt-get terminator  
+sudo apt-get install vlc  
+sudo apt install kolourpaint4 (better use Pinta but it crashes, need to wait for bug fix)  
+obs-studio  
+audacity  
+losslessCutd  
+  
 ******** SPECIFICATION
-short specs:
-lspci
+Short specs:  
+lspci  
 00:02.0 VGA compatible controller: Intel Corporation 2nd Generation Core Processor Family Integrated Graphics Controller (rev 09)
-Full specs:
-sudo lspci -v
+Full specs:  
+lspci -v
 
 ---- Find video card information:
-install lshw
-sudo lshw -c video
+install lshw  
+sudo lshw -c video  
 
 ********
 
@@ -351,7 +350,6 @@ https://blog.ja-ke.tech/2019/08/27/nas-performance-sshfs-nfs-smb.html
 
 Solution for hanging SSHFS:
 
-
 Use -o reconnect,ServerAliveInterval=15,ServerAliveCountMax=3
 
 The combination ServerAliveInterval=15,ServerAliveCountMax=3 causes the I/O errors to pop out after one minute of network outage. This is important but largely undocumented. If ServerAliveInterval option is left at default (so without the alive check), processes which experience I/O hang seem to sleep indefinitely, even after the sshfs gets reconnect'ed. I regard this a useless behavior.
@@ -369,92 +367,76 @@ ALT + F10 = MAXIMIZE
 【Super+p】 【XF86Display】
 
 ##################################
+  
+Get motherboard model:  
+sudo dmidecode -t 2  
 
-How to get motherboard model?
-sudo dmidecode -t 2
+##################################  
+  
+cat /proc/version - Installed Linux version information  
+/usr/sbin/apache2 -v - Apache version information  
+  
+#################################  
+  
+/etc/init.d/apache2 stop  
+/etc/init.d/apache2 start  
+  
+#################################  
+  
+Format Hard Drive  
+mkfs.ext3 /dev/sda  
+  
+################################  
+  
+View connected drives:  
+List all of the partitions on all devices that are listed in /proc/partitions:  
+sudo fdisk -l  
+List all block storage devices:  
+lsblk  
+  
+################################  
+  
+View information about connections  
+cd /etc/NetworkManager/system-connections  
+---------------------------------  
+Debug wifi connection:  
+dmesg  
+  
+################################  
+Configure multiple displays:  
+  
+cd /usr/share/X11/xorg.conf.d  
+sudo nano ~/.config/xfce4/xfconf/xfce-perchannel-xml/displays.xml  
+/etc/X11/xorg.conf  
+  
+1)-----  
+gtf 1920 1080 60  
+OUTPUT:  
+  # 1920x1080 @ 60.00 Hz (GTF) hsync: 67.08 kHz; pclk: 172.80 MHz  
+  Modeline "1920x1080_60.00"  172.80  1920 2040 2248 2576  1080 1081 1084 1118  -HSync +Vsync  
+2)-----  
+xrandr --newmode "1920x1080_60.00"  172.80  1920 2040 2248 2576  1080 1081 1084 1118  -HSync +Vsync  
+xrandr --newmode "1080p"  172.80  1920 2040 2248 2576  1080 1081 1084 1118  -HSync +Vsync  
+3)-----  
+xrandr --addmode DVI-I-1 1920x1080_60.00  
+xrandr --addmode DVI-I-2 1080p  
+4)-----  
+xrandr --output DVI-I-1 --mode 1920x1080_60.00 --rate 60  
+xrandr --output DVI-I-2 --mode 1080p  
+  
+##########################  
+Enabling and disabling wireless devices:  
+rfkill list  
+rfkill unblock wlan  
+ip -brief link  
+  
+#### SCREENSHOTS ###
+Add keyboard shortcut:  
+xfce4-screenshooter -wo screenshot  
+  
+Add screenshot script to /usr/bin/:  
+date_time_ms=$(date +%F_%T_%3N)  
+cp "$1" /home/YOURNAME/Pictures/$date_time_ms.png  
+rm "$1"  
+  
 
-
-##################################
-
-cat /proc/version - Installed Linux version information
-/usr/sbin/apache2 -v - Apache version information
-
-#################################
-
-/etc/init.d/apache2 stop
-/etc/init.d/apache2 start
-
-#################################
-
-Format Hard Drive
-mkfs.ext3 /dev/sda
-
-################################
-
-View connected drives:
-List all of the partitions on all devices that are listed in /proc/partitions:
-sudo fdisk -l
-List all block storage devices.
-lsblk
-
-################################
-
-View information about connections
-cd /etc/NetworkManager/system-connections
----------------------------------
-Debug wifi connection:
-dmesg
-
-################################
-Configure multiple displays:
-
-cd /usr/share/X11/xorg.conf.d
-sudo nano ~/.config/xfce4/xfconf/xfce-perchannel-xml/displays.xml
-/etc/X11/xorg.conf
-
-1)-----
-gtf 1920 1080 60
-OUTPUT:
-  # 1920x1080 @ 60.00 Hz (GTF) hsync: 67.08 kHz; pclk: 172.80 MHz
-  Modeline "1920x1080_60.00"  172.80  1920 2040 2248 2576  1080 1081 1084 1118  -HSync +Vsync
-2)-----
-xrandr --newmode "1920x1080_60.00"  172.80  1920 2040 2248 2576  1080 1081 1084 1118  -HSync +Vsync
-xrandr --newmode "1080p"  172.80  1920 2040 2248 2576  1080 1081 1084 1118  -HSync +Vsync
-3)-----
-xrandr --addmode DVI-I-1 1920x1080_60.00
-xrandr --addmode DVI-I-2 1080p
-4)-----
-xrandr --output DVI-I-1 --mode 1920x1080_60.00 --rate 60
-xrandr --output DVI-I-2 --mode 1080p
-
-##########################
-
-Tool for enabling and disabling wireless devices
-rfkill list
-rfkill unblock wlan
-
-ip -brief link
-
-
-
-#########  G I T  ########
-
-To undo git add before a commit:
-Run git reset <file> or git reset to unstage all changes.
-In older versions of git, the commands were git reset HEAD <file> and git reset HEAD respectively. This was changed in Git 1.8.2
-
--------------
-Push specific commit:
-$ git push <remote name> <commit hash>:<remote branch name>
-
-# Example:
-$ git push origin 2dc2b7e393e6b712ef103eaac81050b9693395a4:master
-------------------------------------------------
-Undo the act of committing, leaving everything else intact:
-git reset --soft HEAD^
-To undo the act of committing and everything you'd staged, but leave the work tree (your files intact):
-git reset HEAD^
-To throw away all uncommitted changes, resetting everything to the previous commit:
-git reset --hard HEAD^
-
-################################################
