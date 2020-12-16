@@ -131,6 +131,22 @@ XKBOPTIONS="grp:alt_shift_toggle"
 sudo udevadm trigger --subsystem-match=input --action=change
 
 #################
+
+Install Driver for "Belkin F8T016"
+Initially detected by ubuntu but doesn't work straight away. Needs two edits:
+
+sudo nano /etc/modprobe.d/blacklist  >> blacklist hci_usb 
+   blacklist hci_usb  < assert line
+sudo nano /etc/modules
+    hci_usb reset=1  < assert line
+
+The first edit stops ubuntu automatically loading the module and the second loads the module with the correct parameter.
+###################################
+sudo apt-get install pulseaudio-module-bluetooth
+killall pulseaudio
+if error erises:
+Connection Failed: blueman.bluez.errors.DBusFailedError: Protocol not available.
+  
 bluetooth for any pc
 pactl list short | grep module-bluetooth
 apt policy pulseaudio-module-bluetooth
@@ -140,24 +156,6 @@ pactl load-module module-bluetooth-discover
 If it doesn't work, try restarting pulseaudio:
 pulseaudio -k
 pulseaudio -D
-
-Install Driver for "Belkin F8T016":
-
-Initially detected by ubuntu but doesn't work straight away. Needs two edits:
-
-    sudo nano /etc/modprobe.d/blacklist
-        blacklist hci_usb  < assert line
-    sudo nano /etc/modules
-        hci_usb reset=1  < assert line
-
-The first edit stops ubuntu automatically loading the module and the second loads the module with the correct parameter.
-
-sudo apt-get install pulseaudio-module-bluetooth
-killall pulseaudio
-if error erises:
-Connection Failed: blueman.bluez.errors.DBusFailedError: Protocol not available.
-
-************** 
 
 After installing Debian with XFCE:  
 sudo apt install pulseaudio-module-bluetooth  
@@ -169,9 +167,8 @@ scan on
 trust [DEVNAME]  
 pair [DEVNAME]  
 connect [DEVNAME]  
-  
-##########################
-  
+------------------------------------
+
 To change Bluetooth Audio profile:  
 systemctl restart bluetooth  
 pacmd list-cards  
@@ -271,10 +268,6 @@ echo "username  ALL=(ALL) NOPASSWD:ALL" | sudo tee /etc/sudoers.d/username
 This approach makes the management of the sudo privileges more maintainable. The name of the file not important, but it is a common practice to name the file according to the username.
 
 *************************************
-Drawing software for debian:
-Pinta doesnt work
-
-*************************************
 Completely remove app with it's deps
 sudo apt-get purge --auto-remove <package_name>
 
@@ -287,18 +280,15 @@ fusermount -u -z /media/name_of_drive
 sshfs -odebug,sshfs_debug,loglevel=debug
 sshfs User@Server:/ /media/Server -o debug,sshfs_debug,loglevel=debug port=10000,allow_other,default_permissions
 
-
-
-Another "hotfix" that worked for me is
 umount /mount/point -f
-I sudo-ed it, don't know if that's necessary for all.
+
 Also, like above, don't autocomplete path with TAB. This "fix" made all my hung apps and windows complete their task queues and work as normal.
 
-sshfs <email address hidden>:/users/username /mount/dir -o idmap=user -o allow_other -o reconnect
+sshfs <email address hidden>:/username /mount/dir -o idmap=user -o allow_other -o reconnect
 
 
 Workaround:
-
+  
 If you go to a different TTY (ctrl+alt+F1) in stead of a Terminal Emulator, tab-complete will have no problem. You can
 umount --force /mount/point
 It will fail, but repeat a bunch of times and it will unmount.
@@ -306,25 +296,8 @@ Switch back you your X session and all your resources are released and functiona
 ---------
 Solution:
 * configure ssh with a ServerAliveInterval value. When there's no traffic to the ssh server, the ssh client will check if the server is still alive every once in a while. This will keepp traffic alive which means that whatever is in between will not terminate the connection. You will want this value to be small but not so small that it sends packagesevery second. For me, 120 (2 minutes) solves the problems but others may need to set it at 30. Add the following to /etc/ssh/ssh_config or to ~/.ssh/config file
-
+  
 ServerAliveInterval 120
-
-* mount with the ServerAliveInterval option. Same as before but rather than configuring ssh, you pass this option when using sshfs. Basically, mount with the following command:
-sshfs user@host:dir mountpoint -o ServerAliveInterval=120
-* use the sshfs specific reconnect option (I haven't tested this option)
-sshfs user@host:dir mountpoint -o reconnect
-For more information see "man ssh_config" for all ssh options and "man sshfs" for the sshfs specific options.
-I do believe that this is poor design of sshfs but in their opinion the problem is that the user doesn't have its ssh client configured properly.
-----------
-Whenever I accidentally touch an sshfs mounted directory which is unavailable, I have to run "killall sshfs" to get things working again. This often happens when I mount a directory on my home network and touch that directory while at work.
-
-Right now my workaround is to use the "ServerAliveInterval" option without the "reconnect" option. This means that when the ssh connection is lost, sshfs exits (and unmounts the locally mounted directory). I then need to run sshfs again when I want to use the mount again (I could also use autofs, I assume).
-
-In my opinion the main problem is that sshfs leaves the local directory in an invalid state while it is "trying to reconnect". No matter what happenes, it seems clear that at any given time the mounted directory should either be mounted or unmounted -- meaning available or unavailable. If the underlying ssh connection has been lost, it makes no sense to keep the directory mounted (and locking up system calls). It's like if you pull a usb disk out of your computer. The media is unavailable. It should be unmounted, no matter what. This is more or less the behaviour I get without the reconnect option.
-
-I would suggest that the reconnect option should simply act as an "outer loop" around a non-reconnecting version of sshfs. The non-reconnecting version should close the ssh connection and unmount the local directory on disconnect. The reconnect loop should then both connect and mount when a connection to the remote host is available again.
-
-Obviously it is also a problem that many applications don't properly handle IO errors, and some even have IO operations in their main loops. But sshfs, fuse, and ssh can't do much to fix this.
 
 ----
 sudo umount -l /mnt/mysshfs" 
@@ -333,20 +306,6 @@ for debbuging purpose use sshfs with options:
 -o debug
 -o sshfs_debug
 
-To share between laptops / mount network drives:
-Use SMB/Samba or NFS or SSHFS
-
-
-SMBv3 on the server, CIFSv2.1 on *NIX clients, native on Windows. Honestly, this combination is the only one that allows me to get >20MB/s on my NAS. NFSv3 gave me 6MB/s, NFSv4 18MB/s, AFS wasn't something I was interested in, and SMBv3 gives me 45-50MB/s.
-I don't use transport encryption, but SMBv3 supports it, and as long as you don't enable anonymous browsing your share will be secured behind decent auth.
-Honestly I think this ticks all the boxes. As long as you're using SMBv3 you can really just use the defaults for your server (I mean, change the name and such), so configuration for both the server and the client are super simple, plus speed, security, and regular filesystem access.
-
-You have some pretty good ideas. Already listed. Nfs and sshfs are both really good minus sshfs is slow with a secure encryption level. And nfs is simple but pretty easy to sniff filenames and capture files when they go over the network. Here are a couple ideas for the more paranoid thinking.
-Iscsi with an encrypted LVM partition. Single node usage.
-Docker with a Kerberos server and another docker running a nfs v4 server. Encrypted and stored securely.
-
-
-https://blog.ja-ke.tech/2019/08/27/nas-performance-sshfs-nfs-smb.html
 
 Solution for hanging SSHFS:
 
@@ -354,18 +313,16 @@ Use -o reconnect,ServerAliveInterval=15,ServerAliveCountMax=3
 
 The combination ServerAliveInterval=15,ServerAliveCountMax=3 causes the I/O errors to pop out after one minute of network outage. This is important but largely undocumented. If ServerAliveInterval option is left at default (so without the alive check), processes which experience I/O hang seem to sleep indefinitely, even after the sshfs gets reconnect'ed. I regard this a useless behavior.
 
-In other words what happens on -o reconnect without assigning ServerAliveInterval is that any I/O will either succeed, or hang the application indefinitely if the ssh reconnects underneath. A typical application becomes entirely hung as a result. If you'd wish to allow I/O to return an error and resume the application, you need ServerAliveInterval=1 or greater.
-
-The ServerAliveCountMax=3 is the default anyway, but I like to specify it for readability.
+On -o reconnect without assigning ServerAliveInterval is that any I/O will either succeed, or hang the application indefinitely if the ssh reconnects underneath. A typical application becomes entirely hung as a result. If you'd wish to allow I/O to return an error and resume the application, you need ServerAliveInterval=1 or greater.
 
 ######## XFCE Shortcuts #########
 
-CTRL ALT D = Hide all windows
-ALT + F3 = Application finder [ALT + F2]
-Windows + L = Logout window
-ALT + F10 = MAXIMIZE
-【Super+p】 【XF86Display】
-
+CTRL ALT D =  Hide all windows  
+ALT F3     =  Application finder [ALT + F2]  
+Windows L  =  Logout window  
+ALT F10    =  MAXIMIZE  
+Super P    =  XF86Display  
+  
 ##################################
   
 Get motherboard model:  
@@ -395,9 +352,8 @@ List all block storage devices:
 lsblk  
   
 ################################  
-  
-View information about connections  
-cd /etc/NetworkManager/system-connections  
+View information about connections:
+cd /etc/NetworkManager/system-connections & ls -l
 ---------------------------------  
 Debug wifi connection:  
 dmesg  
@@ -412,8 +368,8 @@ sudo nano ~/.config/xfce4/xfconf/xfce-perchannel-xml/displays.xml
 1)-----  
 gtf 1920 1080 60  
 OUTPUT:  
-  # 1920x1080 @ 60.00 Hz (GTF) hsync: 67.08 kHz; pclk: 172.80 MHz  
-  Modeline "1920x1080_60.00"  172.80  1920 2040 2248 2576  1080 1081 1084 1118  -HSync +Vsync  
+1920x1080 @ 60.00 Hz (GTF) hsync: 67.08 kHz; pclk: 172.80 MHz  
+Modeline "1920x1080_60.00"  172.80  1920 2040 2248 2576  1080 1081 1084 1118  -HSync +Vsync  
 2)-----  
 xrandr --newmode "1920x1080_60.00"  172.80  1920 2040 2248 2576  1080 1081 1084 1118  -HSync +Vsync  
 xrandr --newmode "1080p"  172.80  1920 2040 2248 2576  1080 1081 1084 1118  -HSync +Vsync  
@@ -433,10 +389,9 @@ ip -brief link
 #### SCREENSHOTS ###
 Add keyboard shortcut:  
 xfce4-screenshooter -wo screenshot  
-  
 Add screenshot script to /usr/bin/:  
 date_time_ms=$(date +%F_%T_%3N)  
-cp "$1" /home/YOURNAME/Pictures/$date_time_ms.png  
+cp "$1" /home/username/$date_time_ms.png  
 rm "$1"  
   
 
