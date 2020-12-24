@@ -1,19 +1,15 @@
-Debian 10 Buster
+# Debian 10 Buster installatioin
 
-1. Download latest version: 
+1. Download latest version:  
 https://www.debian.org/CD/http-ftp/#stable  
-Download latest version: https://cdimage.debian.org/debian-cd/current/amd64/iso-dvd/  
-(The netinst CD here is a small CD image that contains just the core Debian installer code and a small core set of text-mode programs)  
-  
+https://cdimage.debian.org/debian-cd/current/amd64/iso-dvd/    
 
 2. Download firmware:  
 Download the firmware archive for your platform and unpack it into a directory named firmware in the root of a removable storage device (USB/CD drive).  
 When the installer starts, it will automatically find the firmware files in the directory on the removable storage and, if needed, install the firmware for your hardware.  
 https://wiki.debian.org/Firmware  
 http://cdimage.debian.org/cdimage/unofficial/non-free/firmware/  
-  
-OR:  
-  
+OR:
 Unofficial non-free images including firmware packages:  
 https://cdimage.debian.org/cdimage/unofficial/non-free/cd-including-firmware/  
   
@@ -21,62 +17,41 @@ https://cdimage.debian.org/cdimage/unofficial/non-free/cd-including-firmware/
 https://www.debian.org/CD/faq/#write-usb  
 Additionally to the method above for Linux systems, there is also the win32diskimager program available, which allows writing such bootable USB flash drives under Windows.  
 Hint: win32diskimager will apparently only list input files named *.img by default, while the Debian images are named *.iso. Change the filter to *.* if you use this tool.  
-  
 https://www.debian.org/releases/jessie/i386/ch04s03.html.en - prepare bootable flash  
   
-list of connected drives fdisk -l  
-  
-Error:
-failed to determine the codename for the release debootstrap error
-Solution:
-While used unetbootin to create the image on a USB thumb drive. Unetbootin was not the problem, the media not being mounted under /cdrom.
-So it should be manually mounted the usb to /cdrom.
-Hit alt-f2 and then (if alt-f2 not working just load ash)
+list of connected drives:  
+`fdisk -l`
+
+__Error:__ 
+*Failed to determine the codename for the release debootstrap error*  
+__Solution:__
+While used unetbootin to create the image on a USB thumb drive. Unetbootin was not the problem, the media not being mounted under `/cdrom`. So it should be manually mounted the usb to `/cdrom`.  
+Hit `ALT+F2` and then (if `ALT+F2` not working just load *ash*)
 mount /dev/sdc1 /cdrom
 then alt-f1 to get back to the install
 The device for the usb drive may vary. For me it was /dev/sdc1.
-The installer isn't smart enough to know to either mount the install media in /cdrom itself or look for it in /target/media/cdrom.
+The installer isn't smart enough to know to either mount the install media in /cdrom itself or look for it in `/target/media/cdrom`.
 
 **************************************
 
-linux-image-amd64 is a generic metapackage, which depends on the specific default kernel package. 
-In your particular case, linux-image-amd64 probably depends on linux-image-3.16-2-amd64. 
-In general it suffices to install the generic metapackage. 
-You could alternatively install the specific linux-image-3.16-2-amd64 package, but in general it is better style to install the generic meta package.
+`linux-image-amd64` is a generic metapackage, which depends on the specific default kernel package.  
+In your particular case, `linux-image-amd64` probably depends on `linux-image-3.16-2-amd64`.  
+In general it suffices to install the generic metapackage.  
+You could alternatively install the specific `linux-image-3.16-2-amd64` package, but in general it is better style to install the generic meta package.
 
-One specific advantage of installing the generic metapackage (and keeping it installed) is that it makes sure you always stay current on system upgrades. 
-Otherwise, supposing you are upgrading from one Debian release to the next, or even from Debian stable to Debian testing, your kernel version will not automatically be upgraded,
-aside from minor Debian-specific upgrades for security reasons. 
+One specific advantage of installing the generic metapackage (and keeping it installed) is that it makes sure you always stay current on system upgrades.  
+Otherwise, supposing you are upgrading from one Debian release to the next, or even from Debian stable to Debian testing, your kernel version will not automatically be upgraded, aside from minor Debian-specific upgrades for security reasons.  
 However, if you have the generic metapackage installed, the latest kernel will be pulled in as a dependency.
+___
+The Debian Administrator's Handbook:  
+https://debian-handbook.info/browse/stable/sect.installation-steps.html  
+  
+`CTRL+LEFT ALT+F2` - Console Mode (`CTRL+LEFT ALT+F7` - GUI Mode)
 
-**************************************
-
-https://debian-handbook.info/browse/stable/sect.installation-steps.html
-https://www.debian.org/releases/stable/arm64/ch06s01.html.en
-
-Ctrl+Left Alt+F2- console mode
-install grub boot loader
-
+Install grub boot loader  
+```
 apt-get purge xserver-xorg-legacy
-apt-get install xrdp
-
-Applications -> Settings -> Keyboard.
-Open the Application Shortcuts Tab. This is what it looks like(customised).
-To Add a new Shortcut, click on Add 
-xfce4-terminal
-
-How to know vnc port listening current session:
-One option if you have ssh connection to the other machine is to find the litening ports for vnc as explained at the end of this post
-You could login a ssh session and find out the number by
-    netstat -tulpn | grep vnc
-
-and you will get something like the following
-
-tcp   0    0 127.0.0.1:5910     0.0.0.0:*     LISTEN      5365/Xvnc
-
-and then you know 5910 was the port you connected to.
-
-################
+```
 # Configuration
 Xfce is based on GTK+ version 2 (like Gnome 2). 
 https://wiki.debian.org/Xfce
@@ -84,6 +59,9 @@ https://wiki.debian.org/Xfce
 ---------
 XFCE's power managment GUI configurator <- to edit display power settings
 --------
+## Keyboard
+Applications -> Settings -> Keyboard.  
+Add:  `xfce4-terminal`
 
 ################# Add Keyboard Layout
 
@@ -92,8 +70,18 @@ Keyboard > Application shortcuts> Add "thunar ." > SUPER (WINDOWS) + E
 ---- Add shortcut to thunar
 
 PATH: usr/bin/Thunar
+```
 echo $PATH:
 /usr/local/bin:/usr/bin:/bin:/usr/local/games:/usr/games
+```
+################# TO ADD KEYBOARD LANGUAGES:
+
+https://wiki.debian.org/Keyboard
+
+sudo nano /etc/default/keyboard
+XKBLAYOUT="us,lt,ru"
+XKBOPTIONS="grp:alt_shift_toggle"
+sudo udevadm trigger --subsystem-match=input --action=change
 
 ----- PRINTSCREEN SHORTCUT:
 XFCE Menu > Settings > Keyboard > Application Shortcuts
@@ -104,7 +92,7 @@ MAN PAGE: https://docs.xfce.org/apps/screenshooter/usage
 
 CTRL+ALT > firefox
 
-################# CONFIGURE TIME (DEBIAN)
+## Time
 
 sudo dpkg-reconfigure tzdata
 ***if time configuration doesn't work mannualy:
@@ -117,21 +105,11 @@ The format specifiers are documented at docs.xfce.org/xfce/xfce4-panel/clock.
 Set custom Format: %R
 xfce4-panel --restart
 
-################# TO ADD AUDIO CONTROL ON PANEL:
+## PulseAudio Volume Control:
 
 Panel preferences > Items > Hit + > Search for Pulseaudio
 
-################# TO ADD KEYBOARD LANGUAGES:
-
-https://wiki.debian.org/Keyboard
-
-sudo nano /etc/default/keyboard
-XKBLAYOUT="us,lt,ru"
-XKBOPTIONS="grp:alt_shift_toggle"
-sudo udevadm trigger --subsystem-match=input --action=change
-
-#################
-
+## Bluetooth
 Install Driver for "Belkin F8T016"
 Initially detected by ubuntu but doesn't work straight away. Needs two edits:
 
@@ -230,7 +208,7 @@ sudo lshw -c video
 
 ********
 
-###### REMOVE PACKAGE COMPLETELY:
+## REMOVE PACKAGE COMPLETELY:
 sudo apt-get purge wordpress
 sudo apt-get autoremove
 
@@ -395,3 +373,13 @@ cp "$1" /home/username/$date_time_ms.png
 rm "$1"  
   
 
+How to know vnc port listening current session:
+One option if you have ssh connection to the other machine is to find the litening ports for vnc as explained at the end of this post
+You could login a ssh session and find out the number by
+    netstat -tulpn | grep vnc
+
+and you will get something like the following
+
+tcp   0    0 127.0.0.1:5910     0.0.0.0:*     LISTEN      5365/Xvnc
+
+and then you know 5910 was the port you connected to.
