@@ -92,6 +92,17 @@ MAN PAGE: https://docs.xfce.org/apps/screenshooter/usage
 
 CTRL+ALT > firefox
 
+### SCREENSHOTS
+
+Add keyboard shortcut:  
+`xfce4-screenshooter -wo screenshot`  
+Add `screenshot` script to `/usr/bin/`:
+```bash
+date_time_ms=$(date +%F_%T_%3N)
+cp "$1" /home/username/$date_time_ms.png
+rm "$1"  
+```
+
 ## Time
 
 sudo dpkg-reconfigure tzdata
@@ -105,56 +116,68 @@ The format specifiers are documented at docs.xfce.org/xfce/xfce4-panel/clock.
 Set custom Format: %R
 xfce4-panel --restart
 
-## PulseAudio Volume Control:
+## PulseAudio Volume Control
 
 Panel preferences > Items > Hit + > Search for Pulseaudio
 
 ## Bluetooth
-Install Driver for "Belkin F8T016"
-Initially detected by ubuntu but doesn't work straight away. Needs two edits:
-
-sudo nano /etc/modprobe.d/blacklist  >> blacklist hci_usb 
-   blacklist hci_usb  < assert line
-sudo nano /etc/modules
-    hci_usb reset=1  < assert line
-
-The first edit stops ubuntu automatically loading the module and the second loads the module with the correct parameter.
-###################################
+### Install driver for "Belkin F8T016"
+```
+sudo bash -c 'echo "blacklist hci_usb" >> /etc/modprobe.d/blacklist'
+sudo bash -c 'echo "hci_usb reset=1" >> /etc/modules'
+```
+The first edit stops automatically loading the module and the second loads the module with the correct parameter.
+```
 sudo apt-get install pulseaudio-module-bluetooth
 killall pulseaudio
-if error erises:
-Connection Failed: blueman.bluez.errors.DBusFailedError: Protocol not available.
-  
-bluetooth for any pc
+```
+Problem:  
+*Connection Failed: blueman.bluez.errors.DBusFailedError: Protocol not available.*
+
+Bluetooth installing:
+
+```bash
 pactl list short | grep module-bluetooth
 apt policy pulseaudio-module-bluetooth
 sudo apt-get install pulseaudio-module-bluetooth
 pactl load-module module-bluetooth-discover
+```
 
 If it doesn't work, try restarting pulseaudio:
+
+```bash
 pulseaudio -k
 pulseaudio -D
+```
 
-After installing Debian with XFCE:  
-sudo apt install pulseaudio-module-bluetooth  
-pulseaudio -k  
-pulseaudio --start  
-sudo apt-get install bluez-tools  
-run: bluetoothctl  
-scan on  
-trust [DEVNAME]  
-pair [DEVNAME]  
-connect [DEVNAME]  
-------------------------------------
+```bash
+sudo apt install pulseaudio-module-bluetooth
+pulseaudio -k
+pulseaudio --start
+sudo apt-get install bluez-tools
+run: bluetoothctl
+scan on
+trust   [DEVNAME]
+pair    [DEVNAME]
+connect [DEVNAME]
+```
 
-To change Bluetooth Audio profile:  
-systemctl restart bluetooth  
-pacmd list-cards  
-pacmd set-card-profile {index} {profile_name}  
-pacmd set-card-profile 3 a2dp_sink  
-  
-##########################
-  
+Change Bluetooth Audio profile:
+
+```
+systemctl restart bluetooth
+pacmd list-cards
+pacmd set-card-profile {index} {profile_name}
+pacmd set-card-profile 3 a2dp_sink
+```
+
+Problem:  
+*blueman.bluez.errors.DBusFailedError: Resource temporarily unavailable*  
+Solution:  
+`sudo systemctl restart bluetooth`  
+scan for the device once again, pair and connect
+
+___
 #### SCP USE:
 http://www.hypexr.org/linux_scp_help.php
 1. On local machine run script to take file from dev machine:  
@@ -245,11 +268,10 @@ echo "username  ALL=(ALL) NOPASSWD:ALL" | sudo tee /etc/sudoers.d/username
 
 This approach makes the management of the sudo privileges more maintainable. The name of the file not important, but it is a common practice to name the file according to the username.
 
-*************************************
+**************************************
 Completely remove app with it's deps
 sudo apt-get purge --auto-remove <package_name>
-
-*************************************
+**************************************
 
 find against freezing SSHFS:
 unmount the drive:
@@ -293,7 +315,9 @@ The combination ServerAliveInterval=15,ServerAliveCountMax=3 causes the I/O erro
 
 On -o reconnect without assigning ServerAliveInterval is that any I/O will either succeed, or hang the application indefinitely if the ssh reconnects underneath. A typical application becomes entirely hung as a result. If you'd wish to allow I/O to return an error and resume the application, you need ServerAliveInterval=1 or greater.
 
-######## XFCE Shortcuts #########
+**************************************
+
+### XFCE Shortcuts
 
 CTRL ALT D =  Hide all windows  
 ALT F3     =  Application finder [ALT + F2]  
@@ -301,48 +325,55 @@ Windows L  =  Logout window
 ALT F10    =  MAXIMIZE  
 Super P    =  XF86Display  
   
-##################################
+**************************************
   
 Get motherboard model:  
 sudo dmidecode -t 2  
 
-##################################  
+**************************************
   
 cat /proc/version - Installed Linux version information  
 /usr/sbin/apache2 -v - Apache version information  
   
-#################################  
+**************************************
   
 /etc/init.d/apache2 stop  
 /etc/init.d/apache2 start  
   
-#################################  
+**************************************
   
 Format Hard Drive  
 mkfs.ext3 /dev/sda  
   
-################################  
-  
-View connected drives:  
+**************************************
+ 
 List all of the partitions on all devices that are listed in /proc/partitions:  
 sudo fdisk -l  
 List all block storage devices:  
 lsblk  
   
-################################  
-View information about connections:
-cd /etc/NetworkManager/system-connections & ls -l
----------------------------------  
+**************************************
+View information about connections:  
+`cd /etc/NetworkManager/system-connections & ls -l`  
 Debug wifi connection:  
-dmesg  
-  
-################################  
-Configure multiple displays:  
-  
+`dmesg`
+
+Enabling and disabling wireless devices:
+
+```bash
+rfkill list  
+rfkill unblock wlan  
+ip -brief link
+```
+
+**************************************
+
+### Configure multiple displays
+```
 cd /usr/share/X11/xorg.conf.d  
 sudo nano ~/.config/xfce4/xfconf/xfce-perchannel-xml/displays.xml  
 /etc/X11/xorg.conf  
-  
+```
 1)-----  
 gtf 1920 1080 60  
 OUTPUT:  
@@ -357,20 +388,6 @@ xrandr --addmode DVI-I-2 1080p
 4)-----  
 xrandr --output DVI-I-1 --mode 1920x1080_60.00 --rate 60  
 xrandr --output DVI-I-2 --mode 1080p  
-  
-##########################  
-Enabling and disabling wireless devices:  
-rfkill list  
-rfkill unblock wlan  
-ip -brief link  
-  
-#### SCREENSHOTS ###
-Add keyboard shortcut:  
-xfce4-screenshooter -wo screenshot  
-Add screenshot script to /usr/bin/:  
-date_time_ms=$(date +%F_%T_%3N)  
-cp "$1" /home/username/$date_time_ms.png  
-rm "$1"  
   
 
 How to know vnc port listening current session:
