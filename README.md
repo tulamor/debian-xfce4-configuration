@@ -43,6 +43,88 @@ One specific advantage of installing the generic metapackage (and keeping it ins
 Otherwise, supposing you are upgrading from one Debian release to the next, or even from Debian stable to Debian testing, your kernel version will not automatically be upgraded, aside from minor Debian-specific upgrades for security reasons.  
 However, if you have the generic metapackage installed, the latest kernel will be pulled in as a dependency.
 ___
+## Tweaks
+
+Install:
+xfce4-whiskermenu-plugin - Alternate menu plugin for the Xfce desktop environment
+amd64-microcode - Processor microcode firmware for AMD CPUs
+OR
+intel-microcode Processor microcode firmware for Intel CPUs
+gufw - graphical firewall (Choose Deny on Incoming connection not Reject!)
+
+Configure non-free repos, add "contrib non free":
+```
+deb http://deb.debian.org/debian/ buster main non-free contrib
+```
+```bash
+sudo nano /etc/apt/sources.list
+sudo apt update
+sudo apt upgrade ### afterwards restart the system
+```
+Remember user at logon:
+```bash
+sudo nano /usr/share/lightdm/lightdm.conf.d/01_debian.conf
+greeter-hide-users=false
+```
+Window Manager : Button layout > Remove unused buttons
+Window Manager > Advanced : Windows snapping : Enable > To other windows
+
+## Swapfile
+(To create swap partition use `gparted`)  
+To create swapfile:
+```bash
+sudo fallocate -l 10G /swapfile # 10 GB file created in the root dir
+sudo chmod 600 /swapfile
+sudo mkswap /swapfile           # format file to swap
+sudo swapon /swapfile           # enable swap
+sudo nano /etc/fstab            # make changes permanent
+    #append: swapfile swap swap defaults 0 0
+sudo free -h                    # check the status
+```
+To remove swapifle:
+```bash
+sudo swapoff /swapfile # deactivate
+sudo rm /swapfile
+sudo nano /etc/fstab   # remove swap entry
+```
+Swappiness defines how often swap will be used:
+```bash
+cat /proc/sys/vm/swappiness # default is 60
+```
+To change the default value:
+```bash
+sudo nano /etc/sysctl.conf 
+    # append: vm.swappiness=10 # is the recommended value (if you have > 4 GB RAM)
+```
+## Hibernation
+Determinate if swap is a file or a patition:  
+`grep swap /etc/fstab`  
+ If the output is `/swapfile` means it's located on the primary partition.  
+ Get the UUID of the primary partition:  
+`grep UUID /etc/fstab`  
+Modify the grub to include the UUID, so the system will know the location of hibernate snapshot:  
+`sudo nano /etc/default/grub`  
+Edit line:  
+`GRUB_CMDLINE_LINXU_DEFAULT="quiet splash resume=UUID={enter UUID code here instead of curly brackets}`  
+The settings are done if the swap partition is used, for the swapfile continue:  
+`sudo filefrag -v /swapfile`
+```bash
+Filesystem type is: ef53
+File size of /swapfile is 10737418240 (2621440 blocks of 4096 bytes)
+ ext:     logical_offset:        physical_offset: length:   expected: flags:
+   0:        0..       0:    3201024..   3201024:      1:            
+   1:        1..   10239:    3201025..   3211263:  10239:             unwritten
+   2:    10240..   40959:    3241984..   3272703:  30720:    3211264: unwritten
+```
+here we need value - 3201024 to paste into grub:  
+`sudo nano /etc/default/grub`  
+`# append: GRUB_CMDLINE_LINXU_DEFAULT="quiet splash resume=UUID={} resume_offset=3201024`  
+`sudo update-grub` # to update grub config file  
+`sudo reboot`  
+
+https://www.youtube.com/watch?v=NzUmsi9sgmg  
+
+
 The Debian Administrator's Handbook:  
 https://debian-handbook.info/browse/stable/sect.installation-steps.html  
   
@@ -400,3 +482,8 @@ and you will get something like the following
 tcp   0    0 127.0.0.1:5910     0.0.0.0:*     LISTEN      5365/Xvnc
 
 and then you know 5910 was the port you connected to.
+
+
+apt-cache search <-- search available packages
+
+Use gparted for disk resize
