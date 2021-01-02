@@ -487,3 +487,22 @@ and then you know 5910 was the port you connected to.
 apt-cache search <-- search available packages
 
 Use gparted for disk resize
+
+https://dev.to/awwsmm/101-bash-commands-and-tips-for-beginners-to-experts-30je
+```
+CTRL + a        Move the cursor at the beginning of the line
+CTRL + e        Move the cursor at the end of the line
+ALT + .         Use the last word of the previous command
+CTRL + l        Clear the screen
+CTRL + r        Search thought the commands’ history
+$HOME           Translates to the user’s home directory
+$HOSTNAME       Translates to the computer hostname
+$BASHPID        Translates to the process ID of the current bash shell
+```
+
+Add a line at the top of the file:
+sed -i '1s/^/line to insertn/' path/to/file/you/want/to/change.txt
+
+find . -type f -name '*.txt' -exec sed -i '' s/this/that/g {} +
+
+curl -Lks <some-url>
