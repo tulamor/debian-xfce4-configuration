@@ -487,3 +487,14 @@ and then you know 5910 was the port you connected to.
 apt-cache search <-- search available packages
 
 Use gparted for disk resize
+
+---
+
+## Mount android device via mtp
+
+```bash
+jmtpfs -l
+mkdir android
+jmtpfs /media/android
+fusermount -u ~/android
+```
