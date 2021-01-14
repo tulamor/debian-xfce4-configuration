@@ -503,3 +503,25 @@ mkdir android
 jmtpfs /media/android
 fusermount -u ~/android
 ```
+
+## Create Symbolic Links (ln)
+
+symbolic link = symlink = soft link
+Hard links - associating more than one file names with the same inode.
+Cannot be created for files on a different filesystem or partition.
+
+Soft links - indirect pointer to a file.
+Can be pointed to a file on a different filesystem or partition.
+
+ln -s [OPTIONS] FILE DESTINATION
+By default, creates hard links. To create a symbolic link, use the -s (--symbolic) option.
+If only file is given as an argument or the second argument is a dot (.), it will create a link to that file in the current working directory .
+
+Output:
+```
+lrwxrwxrwx 1 user user       45 Jan 14 06:37
+```
+The l character is a file type flag that represents a symbolic link. The -> symbol shows the file the symlink points to.
+
+To overwrite the destination path of the symlink, use the -f (--force) option.
+
