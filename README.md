@@ -525,3 +525,34 @@ The l character is a file type flag that represents a symbolic link. The -> symb
 
 To overwrite the destination path of the symlink, use the -f (--force) option.
 
+## Process in background
+
+Run process
+Press CTRL+Z (^Z) to stop it
+Run bg command to continue with its execution in bg as a job
+
+View all bg jobs:
+jobs
+It`s stdinm, stdout, stderr are still joined to the terminal
+
+Run directly from background - use the ampersand &
+tar -czf FILE . & # Create a gzipped archive in current DIR, while running in background
+
+Detach process from controlling Terminal
+```bash
+firefox </dev/null &>/dev/null &```
+Here input is read from, and output is sent to /dev/null.
+
+OR
+```bash
+( ( command & ) )
+```
+
+## Methods of Enabling Shell Script Debugging Mode
+
+Below are the primary shell script debugging options:
+
+    -v (short for verbose) – tells the shell to show all lines in a script while they are read, it activates verbose mode.
+    -n (short for noexec or no ecxecution) – instructs the shell read all the commands, however doesn’t execute them. This options activates syntax checking mode.
+    -x (short for xtrace or execution trace) – tells the shell to display all commands and their arguments on the terminal while they are executed. This option enables shell tracing mode.
+
