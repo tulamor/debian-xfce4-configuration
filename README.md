@@ -556,3 +556,6 @@ Below are the primary shell script debugging options:
     -n (short for noexec or no ecxecution) – instructs the shell read all the commands, however doesn’t execute them. This options activates syntax checking mode.
     -x (short for xtrace or execution trace) – tells the shell to display all commands and their arguments on the terminal while they are executed. This option enables shell tracing mode.
 
+## Start VLC with default playlist
+
+vlc --playlist-tree --loop ~/playlist.xspf
