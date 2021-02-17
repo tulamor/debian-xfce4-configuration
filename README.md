@@ -45,13 +45,13 @@ However, if you have the generic metapackage installed, the latest kernel will b
 ___
 ## Tweaks
 
-Install:
-xfce4-whiskermenu-plugin - Alternate menu plugin for the Xfce desktop environment
-amd64-microcode - Processor microcode firmware for AMD CPUs
-OR
-intel-microcode Processor microcode firmware for Intel CPUs
-gufw - graphical firewall (Choose Deny on Incoming connection not Reject!)
-
+Install:  
+xfce4-whiskermenu-plugin - Alternate menu plugin for the Xfce desktop environment  
+amd64-microcode - Processor microcode firmware for AMD CPUs  
+OR  
+intel-microcode Processor microcode firmware for Intel CPUs  
+gufw - graphical firewall (Choose Deny on Incoming connection not Reject!)  
+---
 Configure non-free repos, add "contrib non free":
 ```
 deb http://deb.debian.org/debian/ buster main non-free contrib
@@ -222,44 +222,42 @@ Bluetooth installing:
 pactl list short | grep module-bluetooth
 apt policy pulseaudio-module-bluetooth
 sudo apt-get install pulseaudio-module-bluetooth
-pactl load-module module-bluetooth-discover
-```
-
-If it doesn't work, try restarting pulseaudio:
-
-```bash
-pulseaudio -k
-pulseaudio -D
-```
-
-```bash
-sudo apt install pulseaudio-module-bluetooth
-pulseaudio -k
-pulseaudio --start
 sudo apt-get install bluez-tools
+pactl load-module module-bluetooth-discover
+
+# Connect to bluetooth audio
 run: bluetoothctl
 scan on
 trust   [DEVNAME]
 pair    [DEVNAME]
 connect [DEVNAME]
 ```
-
 Change Bluetooth Audio profile:
-
-```
+```bash
 systemctl restart bluetooth
 pacmd list-cards
 pacmd set-card-profile {index} {profile_name}
 pacmd set-card-profile 3 a2dp_sink
 ```
 
-Problem:  
+Error:  
 *blueman.bluez.errors.DBusFailedError: Resource temporarily unavailable*  
 Solution:  
 `sudo systemctl restart bluetooth`  
 scan for the device once again, pair and connect
 
-___
+### Solve issues with pulseaudio
+```bash
+pulseaudio --check # Check if running (a non-zero exit code means it is not running)
+pulseaudio -k      # Kill a running daemon (--kill)
+pulseaudio -D      # Daemonize after startup
+```
+### Audio fix
+```bash
+alsactl init
+alsamixer
+```
+__
 #### SCP USE:
 http://www.hypexr.org/linux_scp_help.php
 1. On local machine run script to take file from dev machine:  
@@ -495,6 +493,8 @@ sed -i '1s/^/line to insertn/' path/to/file/you/want/to/change.txt
 
 find . -type f -name '*.txt' -exec sed -i '' s/this/that/g {} +
 ```
+
+---
 ## Mount android device via mtp
 
 ```bash
@@ -503,7 +503,37 @@ mkdir android
 jmtpfs /media/android
 fusermount -u ~/android
 ```
-
+## Mount drive
+```bash
+lsblk -f     # Output info about filesystems
+sudo blkid   # Lists all recognized partitions and their UUID
+sudo mkdir Storage
+sudo mount /dev/sdc1 ./Storage/
+```
+## Mounting Drives Permanently using fstab
+fstab stores static information about filesystems, mountpoints
+```bash
+nano /etc/fstab
+# append with UUID (example):
+# UUID=0935df16-40b0-48      /home/user/mountpoint      ext4    defaults    0       0 
+findmnt /dev/sdc1 #  Check if device was correctly mounted
+```
+## Mount USB
+```bash
+sudo fdisk -l            #  To manage partition tables and partitions on a hard disk
+lsusb                    #  List USB devices connected
+lsblk                    #  Lists information about devices
+sudo blkid /dev/sdc1     #  get information of /dev/sdc1 which should be added to /etc/fstab
+mkdir -p /home/user/usb  #  Create a mountpoint in home directory recursively
+sudo nano /etc/fstab
+# append with UUID (example):
+# UUID=1234-ABCE      /home/user/usb      vfat       defaults      0       0
+sudo mount /dev/sdc1 /home/user/usb
+cd /home/user/usb
+ls -l
+```
+---
+```
 ## Create Symbolic Links (ln)
 
 symbolic link = symlink = soft link
@@ -559,3 +589,5 @@ Below are the primary shell script debugging options:
 ## Start VLC with default playlist
 
 vlc --playlist-tree --loop ~/playlist.xspf
+
+## 
