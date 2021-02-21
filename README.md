@@ -488,13 +488,15 @@ Use gparted for disk resize
 
 
 ## Add a line at the top of the file:
+
 ```bash
 sed -i '1s/^/line to insertn/' path/to/file/you/want/to/change.txt
 
 find . -type f -name '*.txt' -exec sed -i '' s/this/that/g {} +
 ```
 
----
+**************************************
+
 ## Mount android device via mtp
 
 ```bash
@@ -503,22 +505,31 @@ mkdir android
 jmtpfs /media/android
 fusermount -u ~/android
 ```
+
 ## Mount drive
+
 ```bash
+
 lsblk -f     # Output info about filesystems
 sudo blkid   # Lists all recognized partitions and their UUID
 sudo mkdir Storage
 sudo mount /dev/sdc1 ./Storage/
 ```
+
 ## Mounting Drives Permanently using fstab
+
 fstab stores static information about filesystems, mountpoints
+
 ```bash
+sudo blkid /dev/sdc1 # identify the UUID of the drive
 nano /etc/fstab
 # append with UUID (example):
 # UUID=0935df16-40b0-48      /home/user/mountpoint      ext4    defaults    0       0 
 findmnt /dev/sdc1 #  Check if device was correctly mounted
 ```
+
 ## Mount USB
+
 ```bash
 sudo fdisk -l            #  To manage partition tables and partitions on a hard disk
 lsusb                    #  List USB devices connected
@@ -532,7 +543,20 @@ sudo mount /dev/sdc1 /home/user/usb
 cd /home/user/usb
 ls -l
 ```
----
+
+## Unmount drives
+
+`sudo umount <device|directory>`
+
+```bash
+sudo umount /dev/sdc1
+lsblk /dev/sdc1 # Check if drive partition is unmounted
+sudo umount -l <device|directory> # Lazy umount
+sudo umount --force <device|directory>
+```
+
+**************************************
+
 ```
 ## Create Symbolic Links (ln)
 
