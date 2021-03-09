@@ -486,7 +486,45 @@ apt-cache search <-- search available packages
 
 Use gparted for disk resize
 
+----
+ ## Adjusts the color temperature
+ `http://jonls.dk/redshift/`
+```bash
+sudo apt-get install redshift redshift-gtk
 
+# Append GeoClue's config
+sudo nano /etc/geoclue/geoclue.conf
+
+[redshift]
+allowed=true
+system=false
+users=
+
+# Append redshift config (create if not exist)
+nano ~/.config/redshift.conf
+
+[redshift]
+temp-day=6500
+temp-night=3700
+```
+Make screen "warmer"  
+`redshift -O 4000`  
+
+### Troubleshooting:
+Q. If the screen gone red  
+A. Redshift could permanently alter display settings, run xrandr to set default gamma settings:
+```bash
+user@debian:~$ xrandr --output HDMI-0 --gamma 0.9:0.9:0.9
+user@debian:~$ xrandr --output DVI-D-0 --gamma 0.9:0.9:0.9
+```
+
+Q. Flickering display  
+A. Could happend while running several `redshift` processes at a time  
+```bash
+pgrep redshift | xargs -n1 kill -9  # kill the running redshift processes
+redshift-gtk & disown               # restart redshift 
+```
+----
 ## Add a line at the top of the file:
 
 ```bash
